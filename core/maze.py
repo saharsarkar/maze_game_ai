@@ -106,4 +106,22 @@ class Maze:
                     return path, visited
         return [], visited
 
+    def ids_search(self):
+        """IDS base on graph-search"""
+
+        # Store visited nodes for each iteration
+        visited = dict()
+        # Do dls till end's depth reached
+        depth = 0
+        while True:
+            path, visited[depth] = self.dls_search(
+                self.start_block, self.end_block, depth, [])
+            if path:
+                return path, sum([len(arr) for arr in visited.values()])
+            # If depth reaches 100 then return
+            # To prevent infinite loop for unreachable end block unnecessary
+            if depth == 100:
+                return [], sum([len(arr) for arr in visited.values()])
+            depth += 1
+
     #TODO: a_star_search
