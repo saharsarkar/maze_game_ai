@@ -60,7 +60,30 @@ class Maze:
             block for block in child if not self.walls.__contains__(block.position)]
         return child
 
-    #TODO: bfs_search
+    def bfs_search(self):
+        """BFS base on graph search"""
+
+        queue = []
+        visited = []
+
+        queue.append(self.start_block)
+        visited.append(self.start_block.position)
+
+        while queue:
+            # give the first element of queue
+            cur_block = queue[0]
+            # remove the cur_block from queue
+            queue.remove(cur_block)
+
+            if cur_block.position == self.end_block.position:
+                # return path and length of expanded blocks
+                return self.init_path(cur_block), len(visited)
+            child = self.init_child(cur_block)
+            for block in child:
+                if not visited.__contains__(block.position):
+                    visited.append(block.position)
+                    queue.append(block)
+        return [], len(visited)
 
     #TODO: ids_search
 
