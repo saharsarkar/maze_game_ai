@@ -25,6 +25,14 @@ class Maze:
     def __less_than_equal(self, tuple1, tuple2):
         return all(x <= y for x, y in zip(tuple1, tuple2))
 
+    def __ids_visited_len(self, visited):
+        """Return length of visited blocks in ids"""
+
+        arr = []
+        for item in visited.values():
+            arr.extend(item)
+        return len(list(set(arr)))
+
     def init_path(self, current_block):
         """Path from root to goal"""
 
@@ -117,11 +125,11 @@ class Maze:
             path, visited[depth] = self.dls_search(
                 self.start_block, self.end_block, depth, [])
             if path:
-                return path, sum([len(arr) for arr in visited.values()])
+                return path, self.__ids_visited_len(visited)
             # If depth reaches 100 then return
             # To prevent infinite loop for unreachable end block unnecessary
             if depth == 100:
-                return [], sum([len(arr) for arr in visited.values()])
+                return [], self.__ids_visited_len(visited)
             depth += 1
 
     def a_star_search(self):
