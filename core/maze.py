@@ -124,4 +124,50 @@ class Maze:
                 return [], sum([len(arr) for arr in visited.values()])
             depth += 1
 
-    #TODO: a_star_search
+    def a_star_search(self):
+        """A* search base on graph search"""
+
+        # Create lists for open nodes and closed nodes
+        open = []
+        visited = []
+
+        open.append(self.start_block)
+
+        # Loop until the open list is empty
+        while open:
+            # Get the node with the lowest cost
+            current_block = open[0]
+            open.remove(current_block)
+            visited.append(current_block.position)
+
+            # Check if we have reached the goal, return the path
+            if current_block.position == self.end_block.position:
+                return self.init_path(current_block), len(visited)
+
+            child = self.init_child(current_block)
+            # Loop child
+            for block in child:
+                # Generate blocks in child heuristics
+                block.g = current_block.g + 1
+                # h = (delta(x) ^ 2) + (delta(y) ^ 2)
+                block.h = pow(block.position[0] - self.end_block.position[0], 2) + pow(
+                    block.position[1] - self.end_block.position[1], 2)
+                # f = g + h
+                block.f = block.g + block.h
+                # Check if child is in open list and if it has a lower f value
+                if self.add_to_open(open, block):
+                    # check if current block (child) not in visited
+                    if not visited.__contains__(block.position):
+                        open.append(block)
+                        # Sort blocks base on value of their f
+                        sorted(open, key=lambda node_ob: node_ob.f)
+        # Return None, no path is found
+        return [], len(visited)
+
+    def add_to_open(self, open, block):
+        """Check if a child should be added to open list"""
+
+        for node in open:
+            if block.position == node.position and block.f >= node.f:
+                return False
+        return True

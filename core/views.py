@@ -45,3 +45,23 @@ def ids_view(request):
     path = [{'x': pos[0], 'y': pos[1]} for pos in path]
 
     return JsonResponse({'path': path, 'visited': visited, 'cost': len(path) - 1}, safe=False)
+
+
+@api_view(['POST'])
+@csrf_exempt
+def a_star_view(request):
+    """Handle A* request"""
+
+    data = JSONParser().parse(request)
+    start_block = tuple(data['start'].values())
+    end_block = tuple(data['end'].values())
+    walls = data['walls']
+    filled_blocks = []
+    for row in walls:
+        filled_blocks.extend([tuple([x['x'], x['y']]) for x in row])
+
+    path, visited = Maze(start_block, end_block,
+                         filled_blocks).a_star_search()
+    path = [{'x': pos[0], 'y': pos[1]} for pos in path]
+
+    return JsonResponse({'path': path, 'visited': visited, 'cost': len(path) - 1}, safe=False)
