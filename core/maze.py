@@ -85,6 +85,25 @@ class Maze:
                     queue.append(block)
         return [], len(visited)
 
-    #TODO: ids_search
+    def dls_search(self, src, end, depth, visited):
+        """DSL base on graph search"""
+
+        visited.append(src.position)
+
+        if src.position == end.position:
+            return self.init_path(src), visited
+        # If reached the maximum depth, stop recursing.
+        if depth <= 0:
+            return [], visited
+        child = self.init_child(src)
+        # Recur for all the vertices adjacent to this vertex
+        for block in child:
+            # check the child wasn't visit yet
+            if not visited.__contains__(block.position):
+                path, visited = self.dls_search(
+                    block, end, depth-1, visited)
+                if path:
+                    return path, visited
+        return [], visited
 
     #TODO: a_star_search
